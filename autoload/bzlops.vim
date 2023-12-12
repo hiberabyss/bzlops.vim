@@ -9,6 +9,10 @@ function! bzlops#cur_rule() abort
   return bzlops#get_rule(expand('%'))
 endfunction
 
+function! bzlops#dozer(cmd, rule) abort
+  call system(printf("buildozer '%s' '%s'", a:cmd, a:rule))
+endfunction
+
 function! bzlops#cur_dozer(cmd) abort
   call system(printf("buildozer '%s' '%s'", a:cmd, bzlops#cur_rule()))
 endfunction
@@ -22,7 +26,7 @@ function! bzlops#callback(name) abort
 endfunction
 
 function! bzlops#add_deps() abort
-  silent g/^#include/call bzlops#add_dep()
+  call bzlops#callback('add_deps')
   nohlsearch
 endfunction
 
@@ -52,6 +56,7 @@ function! bzlops#new(kind = '') abort
   call system(printf('touch %s/BUILD', dir))
 
   call system(printf("buildozer 'new %s %s' '%s:__pkg__'", kind, base, dir))
+  call bzlops#cur_dozer(printf('add srcs %s', expand('%:t')))
   call bzlops#callback('new_after')
 endfunction
 

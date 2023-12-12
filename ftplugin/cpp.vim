@@ -1,13 +1,16 @@
-if has_key(g:bzlops_callbacks, cpp)
+if has_key(g:bzlops_callbacks, "cpp")
   finish
 endif
 let g:bzlops_callbacks.cpp = {}
 
 function! g:bzlops_callbacks.cpp.new_after() abort
-  call bzlops#cur_dozer(printf('add srcs %s', expand('%:t')))
   call bzlops#cur_dozer('set stamp 1')
 
   call bzlops#add_deps()
+endfunction
+
+function! g:bzlops_callbacks.cpp.add_deps() abort
+  silent g/^#include/call bzlops#add_dep()
 endfunction
 
 function! g:bzlops_callbacks.cpp.get_dep() abort
