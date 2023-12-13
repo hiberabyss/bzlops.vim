@@ -8,7 +8,7 @@ let s:bzlops_cur.dep_line_pattern = '^\s*#include'
 let s:bzlops_cur.dep_extract_pattern = '"\zs.*\ze"'
 
 function! s:is_binary() abort
-  let main_pattern = '\<main\>'
+  let main_pattern = '\v^\s*(int|void)\_s+main\_s*\('
   
   return search(main_pattern, 'n') > 0
 endfunction

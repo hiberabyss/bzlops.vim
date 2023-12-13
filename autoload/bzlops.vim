@@ -96,7 +96,7 @@ function! bzlops#modify_dep(cmd, dep = '') abort
   endif
 
   if empty(dep)
-    echoerr "ERR: get empty dependency"
+    " echoerr "ERR: get empty dependency"
     return v:false
   endif
 
