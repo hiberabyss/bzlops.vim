@@ -77,7 +77,19 @@ function! bzlops#extract_path() abort
   return ""
 endfunction
 
+function! bzlops#rm_dep(dep = '') abort
+  if bzlops#modify_dep('remove', a:dep)
+    " delete current line when success
+    delete
+    update
+  endif
+endfunction
+
 function! bzlops#add_dep(dep = '') abort
+  call bzlops#modify_dep('add', a:dep)
+endfunction
+
+function! bzlops#modify_dep(cmd, dep = '') abort
   let dep = a:dep
   if empty(dep)
     let dep = bzlops#get_rule(bzlops#extract_path())
@@ -85,10 +97,12 @@ function! bzlops#add_dep(dep = '') abort
 
   if empty(dep)
     echoerr "ERR: get empty dependency"
-    return
+    return v:false
   endif
 
-  call bzlops#cur_dozer(printf('add deps %s', dep))
+  call bzlops#cur_dozer(printf('%s deps %s', a:cmd, dep))
+
+  return v:true
 endfunction
 
 function! bzlops#new(kind = '') abort
@@ -110,7 +124,9 @@ endfunction
 
 " Will delete current file and related bazel rule
 function! bzlops#delete() abort
+  let cur_file = expand('%:p')
   let rule = bzlops#cur_rule()
   call system(printf("buildozer 'delete' '%s'", rule))
-  Delete!
+  call system(printf("rm %s", cur_file))
+  bdelete
 endfunction
