@@ -27,11 +27,11 @@ function! bzlops#cur_dozer(cmd) abort
 endfunction
 
 function! bzlops#get(key, default = '') abort
-  if !g:bzlops_callbacks->has_key(&filetype)
+  if !g:bzlops_custom->has_key(&filetype)
     return a:default
   endif
 
-  let ft_dict = g:bzlops_callbacks[&ft]
+  let ft_dict = g:bzlops_custom[&ft]
   if ft_dict->has_key(a:key)
     return ft_dict[a:key]
   endif
@@ -40,13 +40,13 @@ function! bzlops#get(key, default = '') abort
 endfunction
 
 function! bzlops#callback(name, ...) abort
-  if g:bzlops_callbacks->has_key(&filetype) &&
-        \ g:bzlops_callbacks[&ft]->has_key(a:name)
+  if g:bzlops_custom->has_key(&filetype) &&
+        \ g:bzlops_custom[&ft]->has_key(a:name)
     if a:0 > 0
-      return g:bzlops_callbacks[&ft][a:name](a:000)
+      return g:bzlops_custom[&ft][a:name](a:000)
     endif
 
-    return g:bzlops_callbacks[&ft][a:name]()
+    return g:bzlops_custom[&ft][a:name]()
   endif
 
   return ''

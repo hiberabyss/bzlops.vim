@@ -1,9 +1,9 @@
-" if g:bzlops_callbacks->has_key("proto")
+" if g:bzlops_custom->has_key("proto")
 "   finish
 " endif
 
-let g:bzlops_callbacks.proto = {}
-let s:bzlops_cur = g:bzlops_callbacks.proto
+let g:bzlops_custom.proto = {}
+let s:bzlops_cur = g:bzlops_custom.proto
 
 let s:bzlops_cur.dep_extract_pattern = '[''"]\zs.*\ze[''"]'
 

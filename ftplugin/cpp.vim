@@ -1,8 +1,8 @@
-if has_key(g:bzlops_callbacks, "cpp")
+if has_key(g:bzlops_custom, "cpp")
   finish
 endif
-let g:bzlops_callbacks.cpp = {}
-let s:bzlops_cur = g:bzlops_callbacks.cpp
+let g:bzlops_custom.cpp = {}
+let s:bzlops_cur = g:bzlops_custom.cpp
 
 let s:bzlops_cur.dep_line_pattern = '^\s*#include'
 let s:bzlops_cur.dep_extract_pattern = '"\zs.*\ze"'
