@@ -3,8 +3,11 @@
 " endif
 
 let g:bzlops_callbacks.proto = {}
+let s:bzlops_cur = g:bzlops_callbacks.proto
 
-function! g:bzlops_callbacks.proto.get_kind() abort
+let s:bzlops_cur.dep_extract_pattern = '[''"]\zs.*\ze[''"]'
+
+function! s:bzlops_cur.get_kind() abort
   return "proto_library"
 endfunction
 
@@ -20,22 +23,17 @@ function! s:new_cc_proto() abort
   call bzlops#dozer('add deps :' . base, rule)
 endfunction
 
-function! g:bzlops_callbacks.proto.new_after() abort
-  call bzlops#add_deps()
-
+function! s:bzlops_cur.new_after() abort
   call s:new_cc_proto()
 endfunction
 
-function! g:bzlops_callbacks.proto.add_deps() abort
-  silent g/^import/call bzlops#add_dep()
-endfunction
+function! s:bzlops_cur.custom_rule(args) abort
+  let path = a:args[0]
 
-function! g:bzlops_callbacks.proto.get_dep() abort
-  let line = getline('.')
-  if match(line, 'import') >= 0
-    let path = matchstr(line, '[''"]\zs.*\ze[''"]')
-    return bzlops#get_rule(path)
+  if path =~ '^google\/protobuf'
+    let base = fnamemodify(path, ":t:r")
+    return printf("@com_google_protobuf//:%s_proto", base)
   endif
 
-  return ""
+  return ''
 endfunction
