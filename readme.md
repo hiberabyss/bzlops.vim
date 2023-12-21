@@ -15,6 +15,7 @@ go install github.com/bazelbuild/buildtools/buildozer@latest
 
 - `BzlNew` will create new bazel rule base on current file.
   dependencies will be added
+  - Will add public visibility when has `!`
 - `BzlDelete` will delete current file and corresponding rule
 - `BzlAddDep` will add dependency base on current line
 - `BzlRmDep` will delete current line and corresponding dependency

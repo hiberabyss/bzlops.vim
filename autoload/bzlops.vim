@@ -105,7 +105,7 @@ function! bzlops#modify_dep(cmd, dep = '') abort
   return v:true
 endfunction
 
-function! bzlops#new(kind = '') abort
+function! bzlops#new(bang, kind = '') abort
   let kind = a:kind
   if empty(kind)
     let kind = bzlops#callback('get_kind')
@@ -117,6 +117,11 @@ function! bzlops#new(kind = '') abort
   call system(printf('touch %s/BUILD', dir))
 
   call system(printf("buildozer 'new %s %s' '%s:__pkg__'", kind, base, dir))
+
+  if a:bang
+    call bzlops#cur_dozer("add visibility //visibility:public")
+  endif
+
   call bzlops#cur_dozer(printf('add srcs %s', expand('%:t')))
   call bzlops#add_deps()
   call bzlops#callback('new_after')
